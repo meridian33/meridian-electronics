@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "projects": {
+    "meridian": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "outputPath": "dist/meridian",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
+            "styles": ["src/styles.scss", "src/original.scss"]
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "all",
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "800kB",
+                  "maximumError": "1MB"
+                }
+              ],
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": false
+              }
+            },
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "development": {
+              "buildTarget": "meridian:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    }
+  }
+}

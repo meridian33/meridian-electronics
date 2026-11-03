@@ -1,0 +1,295 @@
+<section class="section">
+  @if(!s.user()){
+  <div class="auth-layout">
+    <div class="auth-intro">
+      <span class="eyebrow">ТВОЁ ПРОСТРАНСТВО MERIDIAN</span>
+      <h1>
+        Все твои<br />возможности.<br />В одном месте<span class="accent"
+          >.</span
+        >
+      </h1>
+      <p>Сохраняй любимое, собирай свой сетап<br />и следи за заказами.</p>
+      <div class="auth-orbit">◉</div>
+    </div>
+    <form class="panel auth-panel" (ngSubmit)="login()" #authForm="ngForm">
+      <div class="tabs">
+        <button
+          type="button"
+          [class.active]="!register"
+          (click)="register=false"
+        >
+          Вход</button
+        ><button
+          type="button"
+          [class.active]="register"
+          (click)="register=true"
+        >
+          Регистрация
+        </button>
+      </div>
+      <h2>{{register?'Начнём знакомство':'С возвращением'}}</h2>
+      @if(register){<label
+        >Имя<input
+          name="name"
+          [(ngModel)]="name"
+          required
+          minlength="2"
+          maxlength="80"
+          autocomplete="name" /></label
+      >}
+      <label
+        >Email<input
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          email
+          maxlength="254"
+          autocomplete="email"
+          placeholder="you@example.com" /></label
+      ><label
+        >Пароль<input
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          [minlength]="register?10:1"
+          maxlength="128"
+          [autocomplete]="register?'new-password':'current-password'"
+      /></label>
+      @if(register){<label
+        >Повторите пароль<input
+          type="password"
+          name="confirm"
+          [(ngModel)]="confirm"
+          required
+          minlength="10"
+          maxlength="128"
+          autocomplete="new-password"
+      /></label>
+      <p class="muted">
+        От 10 символов. Лучше использовать уникальную парольную фразу.
+      </p>
+      }
+      <button class="button dark" [disabled]="s.busy()||authForm.invalid">
+        {{s.busy()?'Подождите…':register?'Создать аккаунт ↗':'Войти ↗'}}
+      </button>
+      <p class="muted">Восстановление по email пока не подключено.</p>
+    </form>
+  </div>
+  } @else {
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">ЛИЧНЫЙ КАБИНЕТ</span>
+      <h1>Привет, {{s.user()!.name}}<span class="accent">.</span></h1>
+      <p>{{s.user()!.email}}</p>
+    </div>
+    <button class="text-button" [disabled]="s.busy()" (click)="s.logout()">
+      Выйти ↗
+    </button>
+  </div>
+  <div class="account-layout">
+    <aside class="account-nav">
+      <button [class.active]="tab==='overview'" (click)="tab='overview'">
+        <img src="/img/icons/user.png" alt="" />Профиль</button
+      ><button [class.active]="tab==='orders'" (click)="tab='orders'">
+        <img src="/img/icons/orders.png" alt="" />Мои заказы</button
+      ><button [class.active]="tab==='requests'" (click)="tab='requests'">
+        <img src="/img/icons/cpu.png" alt="" />Мои сборки</button
+      ><button [class.active]="tab==='support'" (click)="tab='support'">
+        <img src="/img/icons/technicalsupport.png" alt="" />Техподдержка</button
+      ><button [class.active]="tab==='gifts'" (click)="tab='gifts'">
+        <img src="/img/icons/present.png" alt="" />Подарки</button
+      ><button [class.active]="tab==='payments'" (click)="tab='payments'">
+        <img src="/img/icons/shopping-bag.png" alt="" />Реквизиты</button
+      ><button [class.active]="tab==='profile'" (click)="tab='profile'">
+        <img src="/img/icons/phone.png" alt="" />Личная информация</button
+      ><button [class.active]="tab==='security'" (click)="tab='security'">
+        <img src="/img/icons/password.png" alt="" />Безопасность</button
+      ><a routerLink="/favorites"
+        ><img src="/img/icons/love.png" alt="" />Избранное</a
+      >
+    </aside>
+    <div>
+      @if(tab==='overview'){
+      <section class="panel profile-overview">
+        <h2>Профиль</h2>
+        <div class="profile-summary">
+          <span class="profile-avatar" aria-hidden="true"
+            >{{s.user()!.name.slice(0,1).toUpperCase()}}</span
+          >
+          <div>
+            <h3>{{s.user()!.name}}</h3>
+            <p>{{s.user()!.email}}</p>
+            <button class="text-button" (click)="tab='profile'">
+              Изменить личную информацию
+            </button>
+          </div>
+        </div>
+        <div class="profile-links">
+          <button (click)="tab='orders'">
+            Мои заказы · {{orders().length}}</button
+          ><a routerLink="/favorites">Избранное · {{s.favorites().length}}</a
+          ><button (click)="tab='requests'">
+            Мои сборки · {{requests().length}}
+          </button>
+        </div>
+      </section>
+      <section class="panel overview-info">
+        <h2>Личная информация</h2>
+        <p>Телефон: {{s.user()!.phone || 'Не указан'}}</p>
+        <p>Адрес: {{s.user()!.address || 'Не указан'}}</p>
+        <button class="text-button" (click)="tab='security'">
+          Изменить пароль
+        </button>
+      </section>
+      } @if(tab==='payments'){
+      <section class="panel">
+        <h2>Реквизиты</h2>
+        <div class="payment-brands">
+          <img src="/img/kaspi.png" alt="Kaspi" /><img
+            src="/img/bcc.png"
+            alt="BCC"
+          />
+        </div>
+        <h3>Нет привязанных карт</h3>
+        <p>
+          Сейчас доступна оплата при получении. Привязка Kaspi и BCC появится
+          после подключения платёжного сервиса.
+        </p>
+        <a routerLink="/cart">Перейти в корзину →</a>
+      </section>
+      } @if(tab==='support'){
+      <section class="panel">
+        <h2>Техническая поддержка</h2>
+        <p>
+          Это учебный магазин. Заказы сохраняются для демонстрации и не
+          передаются оператору.
+        </p>
+        <div class="support-contacts">
+          <a href="https://github.com/meridian33">Профиль автора на GitHub</a>
+        </div>
+        <button class="text-button" (click)="tab='orders'">
+          Посмотреть номера заказов
+        </button>
+      </section>
+      } @if(tab==='gifts'){
+      <section class="panel">
+        <h2>Подарки</h2>
+        <img class="gift-icon" src="/img/icons/present.png" alt="" />
+        <h3>Подарков пока нет</h3>
+        <p>Сейчас подарочная программа ещё не подключена.</p>
+        <a routerLink="/catalog">Перейти в ассортимент →</a>
+      </section>
+      } @if(tab==='orders'){
+      <h2>История заказов</h2>
+      @for(o of orders();track o.id){
+      <article class="panel order">
+        <div class="section-heading">
+          <h3>Заказ №{{o.id}}</h3>
+          <span class="status">{{o.status}}</span>
+        </div>
+        <p class="muted">{{date(o.created)}} · {{o.address}}</p>
+        @for(item of o.items;track item.name){
+        <div class="order-item">
+          <span>{{item.name}} × {{item.quantity}}</span
+          ><strong>{{s.money(item.price*item.quantity)}}</strong>
+        </div>
+        }
+        <div class="order-total">
+          Итого <strong>{{s.money(o.total)}}</strong>
+        </div>
+        <small>Оплата при получении</small>
+      </article>
+      }@empty{
+      <div class="empty">
+        <h3>Здесь появятся твои заказы</h3>
+        <p>Самое время выбрать что-нибудь для себя.</p>
+        <a class="button dark" routerLink="/catalog">Перейти в каталог ↗</a>
+      </div>
+      }} @if(tab==='profile'){
+      <form class="panel" (ngSubmit)="save()" #profileForm="ngForm">
+        <h2>Личные данные</h2>
+        <label
+          >Имя<input
+            name="name"
+            [(ngModel)]="name"
+            required
+            minlength="2"
+            maxlength="80"
+            autocomplete="name" /></label
+        ><label>Email<input [value]="s.user()!.email" disabled /></label
+        ><label
+          >Телефон<input
+            type="tel"
+            name="phone"
+            [(ngModel)]="phone"
+            maxlength="30"
+            autocomplete="tel" /></label
+        ><label
+          >Адрес<textarea
+            name="address"
+            [(ngModel)]="address"
+            maxlength="300"
+            autocomplete="street-address"
+          ></textarea></label
+        ><button class="button dark" [disabled]="s.busy()||profileForm.invalid">
+          Сохранить изменения
+        </button>
+      </form>
+      } @if(tab==='security'){
+      <form class="panel" (ngSubmit)="changePassword()" #securityForm="ngForm">
+        <h2>Изменить пароль</h2>
+        <label
+          >Текущий пароль<input
+            type="password"
+            name="currentPassword"
+            [(ngModel)]="currentPassword"
+            required
+            maxlength="128"
+            autocomplete="current-password" /></label
+        ><label
+          >Новый пароль<input
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            minlength="10"
+            maxlength="128"
+            autocomplete="new-password" /></label
+        ><label
+          >Повторите новый пароль<input
+            type="password"
+            name="confirm"
+            [(ngModel)]="confirm"
+            required
+            minlength="10"
+            maxlength="128"
+            autocomplete="new-password"
+        /></label>
+        <p class="muted">
+          После смены пароля все остальные сессии будут завершены.
+        </p>
+        <button class="button dark" [disabled]="s.busy()||securityForm.invalid">
+          Обновить пароль
+        </button>
+      </form>
+      } @if(tab==='requests'){
+      <h2>Мои заявки на сборку</h2>
+      @for(r of requests();track r.id){
+      <article class="panel order">
+        <span class="eyebrow">ЗАЯВКА №{{r.id}} · {{date(r.created)}}</span>
+        <h3>{{s.money(r.budget)}}</h3>
+        <p>{{r.purpose}}</p>
+        <span class="status">Сохранена</span>
+      </article>
+      }@empty{
+      <div class="empty">
+        <h3>У тебя ещё нет заявок</h3>
+        <a routerLink="/custom">Описать свой будущий ПК ↗</a>
+      </div>
+      }}
+    </div>
+  </div>
+  }
+</section>

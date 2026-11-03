@@ -1,0 +1,399 @@
+@if(page==='') {
+<section class="hero original-hero">
+  <div class="hero-copy">
+    <h1>ИГРОВАЯ ТЕХНИКА<br />НОВОГО ПОКОЛЕНИЯ<br />УЖЕ ЖДЁТ ТЕБЯ</h1>
+    <p>
+      Приобретайте технику из нашего большого ассортимента в несколько кликов!
+    </p>
+    <a class="button dark" routerLink="/catalog">Каталог товаров</a>
+  </div>
+  <div class="hero-art">
+    <img
+      src="/img/header/rogally.png"
+      alt="Портативная игровая консоль ASUS ROG Ally"
+    />
+  </div>
+</section>
+<section class="original-services" aria-label="Преимущества магазина">
+  <article>
+    <img src="/img/services/range.png" alt="" />
+    <h2>Ассортимент</h2>
+    <p>Большой выбор техники и<br />гаджетов под ваши нужды</p>
+  </article>
+  <article>
+    <img src="/img/services/reliability.png" alt="" />
+    <h2>Надежность</h2>
+    <p>Мы гарантируем качество всех<br />имеющихся товаров</p>
+  </article>
+  <article>
+    <img src="/img/services/convenience.png" alt="" />
+    <h2>Удобство</h2>
+    <p>Удобный выбор товаров и<br />приятный персонал</p>
+  </article>
+</section>
+<section class="section">
+  <div class="section-heading">
+    <h2>Популярные товары</h2>
+    <a routerLink="/catalog">Весь ассортимент →</a>
+  </div>
+  <div class="product-grid">
+    @for(p of s.products();track p.id){<product-card [p]="p" />}
+  </div>
+</section>
+<section class="original-about section" id="about">
+  <div>
+    <h2>Немного о магазине MERIDIAN</h2>
+    <h3>
+      MERIDIAN — это большая команда специалистов, которые тщательно выбирают и
+      проверяют каждый товар, имеющийся в магазине.
+    </h3>
+    <p>
+      Компания была основана в феврале 2023 года Мамутовым Адылжаном И. Целью
+      компании является предоставление высокого качества техники и электроники
+      за адекватную цену. Ведь для потребителей важно получить отличный товар за
+      потраченные деньги.
+    </p>
+  </div>
+  <img src="/img/planetmeridian.png" alt="Планета MERIDIAN" />
+</section>
+} @else if(page==='catalog'||page==='favorites') {
+<section class="section">
+  <div class="breadcrumb">
+    <a routerLink="/">Главная</a> / {{page==='favorites'?'Избранное':'Каталог'}}
+  </div>
+  <div class="section-heading">
+    <div>
+      <span class="eyebrow">НАЙДИ СВОЁ</span>
+      <h1>{{page==='favorites'?'Избранное':'Каталог техники'}}</h1>
+    </div>
+    <span>{{filtered().length}} товаров</span>
+  </div>
+  @if(page==='favorites'&&!s.user()){
+  <div class="empty">
+    <h2>Сохрани то, что нравится</h2>
+    <p>Войди, чтобы избранное было доступно с любого устройства.</p>
+    <a class="button dark" routerLink="/account">Войти</a>
+  </div>
+  }@else{
+  <div class="catalog-layout">
+    <aside class="catalog-sidebar">
+      <h2>Фильтры</h2>
+      <label
+        >Категория<select
+          [ngModel]="category()"
+          (ngModelChange)="category.set($event);currentPage.set(1)"
+        >
+          @for(c of categories;track c){
+          <option [value]="c">{{c}}</option>
+          }
+        </select></label
+      >
+      <label
+        >Бренды производителей<select
+          [ngModel]="brand()"
+          (ngModelChange)="brand.set($event);currentPage.set(1)"
+        >
+          <option value="">Все бренды</option>
+          @for(b of brands;track b){
+          <option [value]="b">{{b}}</option>
+          }
+        </select></label
+      >
+      <label
+        >Диагональ экрана<select
+          [ngModel]="screen()"
+          (ngModelChange)="screen.set($event);currentPage.set(1)"
+        >
+          <option value="">Любая диагональ</option>
+          <option value="27">27″</option>
+        </select></label
+      >
+      <label
+        >Тип матрицы<select
+          [ngModel]="matrix()"
+          (ngModelChange)="matrix.set($event);currentPage.set(1)"
+        >
+          <option value="">Любая матрица</option>
+          <option value="IPS">IPS</option>
+        </select></label
+      >
+      <label
+        >Процессор<select
+          [ngModel]="cpu()"
+          (ngModelChange)="cpu.set($event);currentPage.set(1)"
+        >
+          <option value="">Любой процессор</option>
+          <option value="i5">Intel Core i5</option>
+          <option value="i7">Intel Core i7</option>
+        </select></label
+      >
+      <p class="muted">
+        Варианты соответствуют характеристикам, указанным в каталоге.
+      </p>
+      <label class="checkbox"
+        ><input
+          type="checkbox"
+          [ngModel]="inStock()"
+          (ngModelChange)="inStock.set($event);currentPage.set(1)"
+        />
+        Только в наличии</label
+      ><button class="text-button" (click)="resetFilters()">
+        Сбросить фильтры
+      </button>
+    </aside>
+    <div class="catalog-content">
+      @if(page==='catalog'){
+      <div class="original-banner">
+        <div>
+          <h2>Apple MacBook Pro</h2>
+          <p>Отличное решение под ваши задачи</p>
+          <small>Пока нет в текущем ассортименте</small>
+        </div>
+        <img src="/img/macbook.png" alt="Apple MacBook Pro" />
+      </div>
+      }
+      <div class="filters">
+        <label class="search"
+          >Поиск по каталогу<input
+            id="catalog-search"
+            type="search"
+            placeholder="Название или характеристики"
+            [ngModel]="query()"
+            (ngModelChange)="query.set($event);currentPage.set(1)" /></label
+        ><label
+          >Сортировать по:<select
+            [ngModel]="sort()"
+            (ngModelChange)="sort.set($event);currentPage.set(1)"
+          >
+            <option value="popular">По умолчанию</option>
+            <option value="asc">Сначала дешевле</option>
+            <option value="desc">Сначала дороже</option>
+          </select></label
+        >
+      </div>
+      <div class="product-grid">
+        @for(p of paged();track p.id){<product-card [p]="p" />}@empty{
+        <div class="empty">
+          <h2>Пока ничего</h2>
+          <p>
+            {{page==='favorites'?'Добавляй товары сердечком в
+            каталоге.':'Попробуй другой запрос или категорию.'}}
+          </p>
+          <a routerLink="/catalog">Перейти в каталог ↗</a>
+        </div>
+        }
+      </div>
+      <nav class="pagination" aria-label="Страницы каталога">
+        <button
+          [disabled]="currentPage()<=1"
+          (click)="currentPage.set(currentPage()-1)"
+        >
+          Предыдущая</button
+        >@for(n of pages();track n){<button
+          [class.active]="currentPage()===n"
+          [attr.aria-current]="currentPage()===n?'page':null"
+          (click)="currentPage.set(n)"
+        >
+          {{n}}</button
+        >}<button
+          [disabled]="currentPage()>=pages().length"
+          (click)="currentPage.set(currentPage()+1)"
+        >
+          Следующая
+        </button>
+      </nav>
+    </div>
+  </div>
+  }
+</section>
+} @else if(page==='product/:id') { @if(product();as p){
+<section class="section">
+  <div class="breadcrumb">
+    <a routerLink="/catalog">Каталог</a> / {{p.category}}
+  </div>
+  <div class="product-detail">
+    <div class="detail-image"><img [src]="p.image" [alt]="p.name" /></div>
+    <div>
+      <span class="eyebrow">{{p.category}}</span>
+      <h1>{{p.name}}</h1>
+      <p class="detail-description">{{p.description}}</p>
+      <p class="stock">
+        {{p.stock?'В наличии: '+p.stock+' шт.':'Нет в наличии'}}
+      </p>
+      <h2>{{s.money(p.price)}}</h2>
+      <button
+        class="button dark"
+        [disabled]="s.busy()||!p.stock"
+        (click)="add(p)"
+      >
+        Добавить в корзину +
+      </button>
+      <p class="muted">
+        Оплата при получении. Адрес доставки указывается при оформлении.
+      </p>
+      <div class="detail-info">
+        <h3>Характеристики</h3>
+        @for(spec of p.description.split(' • ');track spec){
+        <p>{{spec}}</p>
+        }
+      </div>
+    </div>
+  </div>
+</section>
+}@else{
+<div class="empty">
+  <h1>Товар не найден</h1>
+  <a routerLink="/catalog">Вернуться в каталог</a>
+</div>
+} } @else if(page==='cart') {
+<section class="section">
+  <div class="breadcrumb"><a routerLink="/">Главная</a> / Корзина</div>
+  <h1>Твой выбор<span class="accent">.</span></h1>
+  @if(!s.cart().length){
+  <div class="empty">
+    <span class="empty-icon">＋</span>
+    <h2>{{s.user()?'Корзина пока пуста':'Войди, чтобы открыть корзину'}}</h2>
+    <p>Твой новый сетап начинается с одного устройства.</p>
+    <a class="button dark" [routerLink]="s.user()?'/catalog':'/account'"
+      >{{s.user()?'Выбрать технику':'Войти'}}</a
+    >
+  </div>
+  }@else{
+  <div class="checkout-layout">
+    <div class="cart-list">
+      @for(p of s.cart();track p.id){
+      <article class="cart-row">
+        <a [routerLink]="['/product',p.id]"
+          ><img [src]="p.image" [alt]="p.name"
+        /></a>
+        <div>
+          <a [routerLink]="['/product',p.id]"><h3>{{p.name}}</h3></a>
+          <p>{{s.money(p.price)}}</p>
+          <div class="quantity">
+            <button
+              [disabled]="s.busy()"
+              (click)="s.quantity(p,(p.quantity||1)-1)"
+              [attr.aria-label]="'Уменьшить количество '+p.name"
+            >
+              −</button
+            ><span>{{p.quantity}}</span
+            ><button
+              [disabled]="s.busy()||(p.quantity||0)>=p.stock"
+              (click)="s.quantity(p,(p.quantity||0)+1)"
+              [attr.aria-label]="'Увеличить количество '+p.name"
+            >
+              +
+            </button>
+          </div>
+        </div>
+        <div class="cart-end">
+          <strong>{{s.money(p.price*(p.quantity||0))}}</strong
+          ><button
+            class="text-button"
+            [disabled]="s.busy()"
+            (click)="s.quantity(p,0)"
+          >
+            Удалить
+          </button>
+        </div>
+      </article>
+      }
+    </div>
+    <form class="panel checkout" (ngSubmit)="checkout()" #checkoutForm="ngForm">
+      <span class="eyebrow">ОФОРМЛЕНИЕ ЗАКАЗА</span>
+      <h2>Итого {{s.money(s.total())}}</h2>
+      <p>{{s.count()}} шт. · Оплата при получении</p>
+      <label
+        >Телефон<input
+          type="tel"
+          name="phone"
+          [(ngModel)]="phone"
+          required
+          minlength="7"
+          maxlength="30"
+          autocomplete="tel"
+          placeholder="+7 …" /></label
+      ><label
+        >Адрес доставки<textarea
+          name="address"
+          [(ngModel)]="address"
+          required
+          minlength="10"
+          maxlength="300"
+          autocomplete="street-address"
+          placeholder="Город, улица, дом, квартира"
+        ></textarea>
+      </label>
+      <p class="muted">Доставка: 0 ₸ в учебной версии. Онлайн-списаний нет.</p>
+      <button class="button dark" [disabled]="s.busy()||checkoutForm.invalid">
+        {{s.busy()?'Оформляем…':'Оформить заказ ↗'}}
+      </button>
+    </form>
+  </div>
+  }
+</section>
+} @else if(page==='custom') {
+<section class="section">
+  <div class="breadcrumb">
+    <a routerLink="/">Главная</a> / Компьютер на заказ
+  </div>
+  <div class="custom-layout">
+    <div>
+      <span class="eyebrow">ТОЧНО ПОД ТВОИ ЗАДАЧИ</span>
+      <h1>Собери свой<br />следующий уровень.</h1>
+      <p class="detail-description">
+        Для игр, дизайна или разработки.<br />Оставь пожелания к будущей сборке.
+      </p>
+      <img
+        class="custom-pc"
+        src="/img/products/lenovolegionpc.png"
+        alt="Компьютер Lenovo"
+      />
+    </div>
+    <form class="panel" (ngSubmit)="request()" #requestForm="ngForm">
+      <h2>Заявка на сборку</h2>
+      <label
+        >Бюджет, ₸<input
+          type="number"
+          name="budget"
+          [(ngModel)]="budget"
+          min="100000"
+          max="10000000"
+          required /></label
+      ><label
+        >Для чего нужен компьютер?<textarea
+          name="purpose"
+          [(ngModel)]="purpose"
+          required
+          minlength="10"
+          maxlength="2000"
+          placeholder="Любимые игры, программы, пожелания…"
+        ></textarea></label
+      ><label
+        >Телефон<input
+          type="tel"
+          name="phone"
+          [(ngModel)]="phone"
+          required
+          minlength="7"
+          maxlength="30"
+      /></label>
+      <p class="muted">
+        Заявка сохранится в кабинете. В учебной версии оператор и уведомления не
+        подключены.
+      </p>
+      @if(s.user()){<button
+        class="button dark"
+        [disabled]="s.busy()||requestForm.invalid"
+      >
+        Сохранить заявку ↗</button
+      >}@else{<a
+        class="button dark"
+        routerLink="/account"
+        [queryParams]="{returnUrl:'/custom'}"
+        >Войти для отправки</a
+      >}
+    </form>
+  </div>
+</section>
+}
