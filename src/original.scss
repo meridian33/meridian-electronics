@@ -782,3 +782,23 @@ main,
   font-size: 30px;
   font-weight: 700;
 }
+.account-content {
+  min-width: 0;
+}
+
+.account-contact-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr));
+  gap: 1rem;
+  margin: 0 0 1rem;
+}
+
+.account-contact-list dt {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.account-contact-list dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}

@@ -110,17 +110,17 @@
         ><img src="/img/icons/love.png" alt="" />Избранное</a
       >
     </aside>
-    <div>
+    <div class="account-content">
       @if(tab==='overview'){
       <section class="panel profile-overview">
-        <h2>Профиль</h2>
+        <h2>Личная информация</h2>
         <div class="profile-summary">
           <span class="profile-avatar" aria-hidden="true"
             >{{s.user()!.name.slice(0,1).toUpperCase()}}</span
           >
           <div>
             <h3>{{s.user()!.name}}</h3>
-            <p>{{s.user()!.email}}</p>
+            <p>Аккаунт MERIDIAN</p>
             <button class="text-button" (click)="tab='profile'">
               Изменить личную информацию
             </button>
@@ -136,9 +136,35 @@
         </div>
       </section>
       <section class="panel overview-info">
-        <h2>Личная информация</h2>
-        <p>Телефон: {{s.user()!.phone || 'Не указан'}}</p>
-        <p>Адрес: {{s.user()!.address || 'Не указан'}}</p>
+        <h2>Реквизиты</h2>
+        <p>Демонстрационные заказы оформляются с оплатой при получении.</p>
+        <button class="text-button" (click)="tab='payments'">
+          Способы оплаты
+        </button>
+      </section>
+      <section class="panel overview-info">
+        <h2>Контактная информация</h2>
+        <dl class="account-contact-list">
+          <div>
+            <dt>Телефон</dt>
+            <dd>{{s.user()!.phone || 'Не указан'}}</dd>
+          </div>
+          <div>
+            <dt>Электронная почта</dt>
+            <dd>{{s.user()!.email}}</dd>
+          </div>
+          <div>
+            <dt>Адрес</dt>
+            <dd>{{s.user()!.address || 'Не указан'}}</dd>
+          </div>
+        </dl>
+        <button class="text-button" (click)="tab='profile'">
+          Изменить контакты
+        </button>
+      </section>
+      <section class="panel overview-info">
+        <h2>Безопасность</h2>
+        <p>После смены пароля другие сеансы будут завершены.</p>
         <button class="text-button" (click)="tab='security'">
           Изменить пароль
         </button>
