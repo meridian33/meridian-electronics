@@ -4,6 +4,10 @@ A full-stack electronics store built with Angular, Express and SQLite. A portfol
 
 **Demo store:** catalog items and orders are for demonstration. No real payment, delivery or operator notification is performed.
 
+## Storefront preview
+
+![Meridian Electronics storefront with the main navigation, catalog button, and ASUS ROG Ally hero image](docs/preview/storefront.png)
+
 ## Features
 
 - Responsive storefront, searchable catalog, category/brand filters and price sorting.
